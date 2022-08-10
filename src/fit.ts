@@ -1,6 +1,7 @@
 import type { DirectiveBinding, ObjectDirective } from 'vue'
 import type { ElementOptions, FitOptions } from './types'
 import { setAnimate } from './animations' // 动画相关
+import './events' // 事件相关
 
 /**
  *  -----------
