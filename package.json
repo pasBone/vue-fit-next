@@ -1,0 +1,61 @@
+{
+  "name": "vue-fit",
+  "version": "0.1.0",
+  "description": "Vue directive with fit screen kit 一个屏幕自适应工具集合的vue指令",
+  "author": "pasbone",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pasBone/vue-fit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pasBone/vue-fit/issues"
+  },
+  "keywords": [
+    "vue",
+    "big screen",
+    "adaptation screen",
+    "大屏适配工具集"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "pkgroll",
+    "dev": "pkgroll --watch",
+    "play": "vite playground --open",
+    "play:build": "vite build playground",
+    "lint": "eslint .",
+    "typecheck": "vue-tsc --noEmit",
+    "test": "vitest",
+    "prepublishOnly": "nr build",
+    "release": "bumpp --commit --tag --push && pnpm publish"
+  },
+  "dependencies": {
+    "rxjs": "^7.5.6",
+    "vue": "^3.2.37"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^0.25.2",
+    "@types/node": "^17.0.43",
+    "cypress": "^9.5.4",
+    "eslint": "^8.17.0",
+    "pkgroll": "^1.3.1",
+    "pnpm": "^7.2.1",
+    "typescript": "^4.7.3",
+    "vite": "^2.9.12",
+    "vitest": "^0.15.1",
+    "vue-router": "^4.0.16",
+    "vue-tsc": "^0.37.8"
+  }
+}
