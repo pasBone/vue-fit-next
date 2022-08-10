@@ -1,0 +1,26 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite --port 3333 --open",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@vueuse/core": "^8.6.0",
+    "nanoid": "^4.0.0",
+    "vue": "^3.2.37",
+    "vue-router": "^4.0.16"
+  },
+  "devDependencies": {
+    "@iconify-json/carbon": "^1.1.5",
+    "@unocss/reset": "^0.39.0",
+    "@vitejs/plugin-vue": "^2.3.3",
+    "eslint": "^8.17.0",
+    "unocss": "^0.39.0",
+    "unplugin-auto-import": "^0.8.8",
+    "unplugin-vue-components": "^0.19.6",
+    "vite": "^2.9.12",
+    "vite-plugin-pages": "^0.24.1"
+  }
+}
