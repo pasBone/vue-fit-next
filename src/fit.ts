@@ -1,5 +1,6 @@
 import type { DirectiveBinding, ObjectDirective } from 'vue'
 import type { ElementOptions, FitOptions } from './types'
+import { setAnimate } from './animations' // 动画相关
 
 /**
  *  -----------
@@ -86,6 +87,9 @@ export function directiveHooks(fitOptions: FitOptions): ObjectDirective {
 
       // 初始化时给每个元素设置scale
       setElementScale(el, scale, options)
+
+      // 给每个元素添加动画
+      setAnimate(el, options, defaultFitOptions)
     },
 
     unmounted(el) {
