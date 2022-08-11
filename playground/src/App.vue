@@ -132,6 +132,7 @@ body{
 }
 
 .box {
+  height: 100vh;
   display: flex;
   justify-content: space-between;
   position: relative;
