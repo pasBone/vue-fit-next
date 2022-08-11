@@ -1,20 +1,21 @@
 {
-  "name": "vue-fit",
+  "name": "vue-fit-next",
   "version": "0.1.0",
-  "description": "Vue directive with fit screen kit 一个屏幕自适应工具集合的vue指令",
+  "description": "Vue directive with fit screen kit 一个屏幕自适应工具集合的vue指令, 具有拖拽、缩放、入场出场动画",
   "author": "pasbone",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pasBone/vue-fit.git"
+    "url": "git+https://github.com/pasBone/vue-fit-next.git"
   },
   "bugs": {
-    "url": "https://github.com/pasBone/vue-fit/issues"
+    "url": "https://github.com/pasBone/vue-fit-next/issues"
   },
   "keywords": [
     "vue",
     "big screen",
     "adaptation screen",
+    "drag scale",
     "大屏适配工具集"
   ],
   "exports": {

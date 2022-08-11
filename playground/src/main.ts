@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import Fit from 'vue-fit'
+import Fit from 'vue-fit-next'
 import App from './App.vue'
 
 const app = createApp(App)

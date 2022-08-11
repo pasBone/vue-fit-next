@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import { leave } from 'vue-fit'
+import { leave } from 'vue-fit-next'
 const show = ref(true)
 const click = (value) => {
   console.log(value)

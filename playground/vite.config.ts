@@ -10,7 +10,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '~/': `${path.resolve(__dirname, 'src')}/`,
-      'vue-fit': path.resolve(__dirname, '../src/index.ts'),
+      'vue-fit-next': path.resolve(__dirname, '../src/index.ts'),
     },
   },
   plugins: [

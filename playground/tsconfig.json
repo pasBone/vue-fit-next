@@ -20,7 +20,7 @@
       "~/*": [
         "src/*"
       ],
-      "vue-fit": [
+      "vue-fit-next": [
         "../src/index.ts"
       ]
     }
