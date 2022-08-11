@@ -94,7 +94,7 @@ bodyTransform$.pipe(
  */
 resize$.pipe(
   throttleTime(10),
-  map(getElementScale),
+  map(() => getElementScale(1)),
   map(v => scale$.next(v)),
 ).subscribe()
 

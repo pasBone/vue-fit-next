@@ -111,7 +111,7 @@ function createStyleSheet() {
 
 /** insert animate css rules */
 function insertRule() {
-  const scale = getElementScale()
+  const scale = getElementScale(1)
   const rules = setAnimationFrames(scale)
   for (const key in rules)
     styleSheet?.insertRule(rules[key as AnimateNames])

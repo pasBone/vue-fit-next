@@ -17,6 +17,8 @@ export interface Animate {
   leave?: AnimateType | AnimateNames
 }
 
+export type TransformOrigin = `${keyof typeof TRANSFORM_ORIGIN}`
+
 /** 指令注册时全局的配置 */
 export interface FitOptions {
   /** 设计稿的宽度 */
@@ -32,8 +34,8 @@ export interface FitOptions {
 /** 单个组件的个性配置 */
 export interface ElementOptions extends Animate {
 
-  /** 组件在css中的变换中心位置，也可以忽略此配置直接使用 css 如：transform-origin: left top; */
-  origin: keyof typeof TRANSFORM_ORIGIN
+  /** 组件在css中的变换中心位置 */
+  origin: TransformOrigin
 
   /** 缩放值 */
   scale: number

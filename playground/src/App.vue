@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { leave } from 'vue-fit-next'
+import Header from '~/components/Header/index.vue'
 const show = ref(true)
 const click = (value) => {
   console.log(value)
@@ -12,6 +13,7 @@ function onEnter(el) {
 </script>
 
 <template>
+  <Header />
   <Transition mode="out-in" :css="false" @leave="leave">
     <div v-if="show" class="box">
       <div
@@ -111,9 +113,9 @@ function onEnter(el) {
     </div>
   </Transition>
 
-  <button class="button" @click="show = !show">
+  <!-- <button class="button" @click="show = !show">
     切换
-  </button>
+  </button> -->
 </template>
 
 <style>
@@ -127,21 +129,25 @@ html {
   overflow: hidden;
 }
 
-body{
+body {
   transform-origin: 0 0;
 }
 
 .box {
-  height: 100vh;
+  /* width: 777px; */
+  height: 2160px;
   display: flex;
   justify-content: space-between;
   position: relative;
 }
 
 .left {
-  width: 400px;
-  height: 100vh;
+  width: 777px;
+  height: 2160px;
   background: red;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .right {

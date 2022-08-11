@@ -1,5 +1,5 @@
 import type { DirectiveBinding, ObjectDirective } from 'vue'
-import type { ElementOptions, FitOptions } from './types'
+import type { ElementOptions, FitOptions, TransformOrigin } from './types'
 import { setAnimate } from './animations' // 动画相关
 import './events' // 事件相关
 
@@ -41,11 +41,20 @@ export const elements = new Map<HTMLElement, ElementOptions>()
 /**
  * 根据窗口大小计算元素的比例.
  */
-export function getElementScale(): number {
-  const w = window.innerWidth / defaultFitOptions.width
-  const h = window.innerHeight / defaultFitOptions.height
-  const scale = Math.min(w, h) // 宽度与高度的比例取最小的，以确保屏幕可以完全显示
-  return scale
+export function getElementScale(origin: TransformOrigin): number {
+  const vertical = ['1', '4', '7', '3', '6', '9', 'left']
+  const horizontal = ['2', '8', 'right']
+  const center = [5, 'center']
+  if (vertical.includes(origin))
+    return window.innerHeight / defaultFitOptions.height
+
+  if (horizontal.includes(origin))
+    return window.innerWidth / defaultFitOptions.width
+
+  if (center.includes(origin))
+    return (window.innerWidth / defaultFitOptions.width + window.innerHeight / defaultFitOptions.height) / 2
+
+  return 1
 }
 
 /**
@@ -57,9 +66,11 @@ export function setElementScale(el: HTMLElement, scale: number, options: Element
   }
   else {
     Object.assign(el.style, {
-      transformOrigin: TRANSFORM_ORIGIN[options.origin],
+      // transformOrigin: TRANSFORM_ORIGIN[options.origin],
+      transformOrigin: 'left top',
       // transform: el.style.transform.replace(/scale\(.+?\)/g, scaleStr),
       transform: `matrix(${scale}, 0, 0, ${scale}, 0, 0)`,
+      // transform: `translate(0px, 0px) scale(${scale}, ${scale})`,
     })
   }
 }
@@ -68,16 +79,19 @@ export function setElementScale(el: HTMLElement, scale: number, options: Element
 export function directiveHooks(fitOptions: FitOptions): ObjectDirective {
   defaultFitOptions = fitOptions
 
-  // 首次计算scale
-  const scale = getElementScale()
-
   return {
     mounted(el: HTMLElement, binding: DirectiveBinding) {
       el.dataset.fit = ''
+
       const { arg, value } = binding
+
+      const origin = value?.origin || arg || 'left'
+
+      const scale = getElementScale(origin)
+
       const options: ElementOptions = {
-        origin: value?.origin || arg || 'left',
         animate: value?.animate,
+        origin,
         scale,
       }
 
@@ -88,7 +102,7 @@ export function directiveHooks(fitOptions: FitOptions): ObjectDirective {
       setElementScale(el, scale, options)
 
       // 给每个元素添加动画
-      setAnimate(el, options, defaultFitOptions)
+      // setAnimate(el, options, defaultFitOptions)
     },
 
     unmounted(el) {

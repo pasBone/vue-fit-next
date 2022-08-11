@@ -6,8 +6,8 @@ const app = createApp(App)
 
 app
   .use(Fit({
-    width: 1920,
-    height: 1080,
+    width: 3840,
+    height: 2160,
     animate: {
       enter: {
         duration: 600,
