@@ -5,13 +5,15 @@ type RequiredAnimateType = Required<AnimateType>
 
 let styleSheet: CSSStyleSheet | null = null
 
+let defaultFitOptions: FitOptions
 /**
  * @description 给元素添加出场/入场动画
  * @param el
  * @param elementOptions
- * @param fitOptions
+ * @param defaultFitOptions
  */
 export function setAnimate(el: HTMLElement, elementOptions: ElementOptions, fitOptions: FitOptions) {
+  defaultFitOptions = fitOptions
   // 动态创建 styleSheet
   if (styleSheet === null)
     createStyleSheet()
@@ -132,6 +134,9 @@ export function updateRule() {
 
 /** animation frames */
 function setAnimationFrames(scale: number): Record<AnimateNames, string> {
+  if (defaultFitOptions.mode === 'zoom')
+    scale = 1
+
   return {
 
     slideInLeft: `@keyframes slideInLeft {

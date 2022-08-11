@@ -52,11 +52,16 @@ export function getElementScale(): number {
  * 设置单个元素的scale.
  */
 export function setElementScale(el: HTMLElement, scale: number, options: ElementOptions) {
-  Object.assign(el.style, {
-    transformOrigin: TRANSFORM_ORIGIN[options.origin],
-    // transform: el.style.transform.replace(/scale\(.+?\)/g, scaleStr),
-    transform: `matrix(${scale}, 0, 0, ${scale}, 0, 0)`,
-  })
+  if (defaultFitOptions.mode === 'zoom') {
+    Object.assign(el.style, { zoom: scale })
+  }
+  else {
+    Object.assign(el.style, {
+      transformOrigin: TRANSFORM_ORIGIN[options.origin],
+      // transform: el.style.transform.replace(/scale\(.+?\)/g, scaleStr),
+      transform: `matrix(${scale}, 0, 0, ${scale}, 0, 0)`,
+    })
+  }
 }
 
 /** 指令对应的生命周期  */

@@ -19,9 +19,14 @@ export interface Animate {
 
 /** 指令注册时全局的配置 */
 export interface FitOptions {
+  /** 设计稿的宽度 */
   width: number
+  /** 设计稿的高度 */
   height: number
+  /** 动画 */
   animate?: Animate
+  /** 适配方式 */
+  mode?: 'zoom' | 'scale'
 }
 
 /** 单个组件的个性配置 */
