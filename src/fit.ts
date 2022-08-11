@@ -52,17 +52,10 @@ export function getElementScale(): number {
  * 设置单个元素的scale.
  */
 export function setElementScale(el: HTMLElement, scale: number, options: ElementOptions) {
-  const hasScale = el.style.transform.includes('scale')
-  const scaleStr = `scale(${scale}, ${scale})`
-
-  if (!hasScale)
-    el.style.transform += scaleStr
-
   Object.assign(el.style, {
-    pointerEvents: 'none',
-    userSelect: 'none',
     transformOrigin: TRANSFORM_ORIGIN[options.origin],
-    transform: el.style.transform.replace(/scale\(.+?\)/g, scaleStr),
+    // transform: el.style.transform.replace(/scale\(.+?\)/g, scaleStr),
+    transform: `matrix(${scale}, 0, 0, ${scale}, 0, 0)`,
   })
 }
 
