@@ -19,11 +19,11 @@ export const TRANSFORM_ORIGIN = {
   2: 'center top',
   3: 'right top',
   // 中间部分
-  4: 'left center',
+  4: 'left top',
   5: 'center center',
   6: 'right center',
   // 下边部分
-  7: 'left bottom',
+  7: 'left top',
   8: 'center bottom',
   9: 'right bottom',
   // 上部分简写
@@ -69,7 +69,7 @@ export function setElementScale(el: HTMLElement, scale: number, options: Element
       // transformOrigin: TRANSFORM_ORIGIN[options.origin],
       transformOrigin: 'left top',
       // transform: el.style.transform.replace(/scale\(.+?\)/g, scaleStr),
-      transform: `matrix(${scale}, 0, 0, ${scale}, 0, 0)`,
+      transform: `matrix(${scale}, 0, 0, ${scale}, ${el.clientWidth - el.clientWidth * scale}, 0)`,
       // transform: `translate(0px, 0px) scale(${scale}, ${scale})`,
     })
   }
