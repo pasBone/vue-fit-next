@@ -119,8 +119,8 @@ function insertRule() {
 function removeRule() {
   const rules = styleSheet?.cssRules
   if (rules) {
-    for (let i = 0; i < rules?.length; i++)
-      styleSheet?.deleteRule(i)
+    while (rules.length)
+      styleSheet?.deleteRule(0)
   }
 }
 
