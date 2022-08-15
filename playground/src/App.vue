@@ -22,7 +22,7 @@ function onEnter(el) {
           animate: {
             enter: {
               name: 'slideInLeft',
-              duration: 800,
+              duration: 500,
             },
             leave: 'slideOutLeft',
           },
@@ -113,9 +113,9 @@ function onEnter(el) {
     </div>
   </Transition>
 
-  <!-- <button class="button" @click="show = !show">
+  <button class="button" @click="show = !show">
     切换
-  </button> -->
+  </button>
 </template>
 
 <style>
@@ -135,19 +135,16 @@ body {
 
 .box {
   /* width: 777px; */
-  height: 2160px;
+  height: 100vh;
   display: flex;
   justify-content: space-between;
   position: relative;
 }
 
 .left {
-  width: 777px;
-  height: 2160px;
+  width: 675px;
+  height: 2025px;
   background: red;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
 }
 
 .right {
