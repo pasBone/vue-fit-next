@@ -1,9 +1,6 @@
-import { BehaviorSubject, Subject, bufferWhen, debounceTime, filter, fromEvent, map, mergeMap, scan, switchMap, takeUntil, tap, throttleTime } from 'rxjs'
-import { elements, getElementScale, setElementScale } from './fit'
-import { updateRule } from './animations'
-
-/** 元素的缩放值. */
-export const scale$ = new Subject<number>()
+import { BehaviorSubject, bufferWhen, debounceTime, filter, fromEvent, map, mergeMap, scan, switchMap, takeUntil, tap, throttleTime } from 'rxjs'
+import { element$, getElementScale } from './fit'
+import { getTranslateValue } from './utils'
 
 /** 设置 body transform */
 const bodyTransform$ = new BehaviorSubject({ scale: 1, x: 0, y: 0 })
@@ -40,7 +37,7 @@ spaceDown$.pipe(
   tap(() => body.style.cursor = 'all-scroll'),
   mergeMap(() => mousedown$.pipe(
     map((event) => {
-      const { x, y } = getTransformValue(body)
+      const { x, y } = getTranslateValue(body)
       return {
         x: event.clientX - x,
         y: event.clientY - y,
@@ -90,21 +87,13 @@ bodyTransform$.pipe(
 ).subscribe(setBodyTransform)
 
 /**
- * 监听窗口 resize 事件，通知到 scale 的订阅者.
+ * 监听窗口 resize 事件，通知到 element 的订阅者.
  */
 resize$.pipe(
   throttleTime(10),
-  map(() => getElementScale(1)),
-  map(v => scale$.next(v)),
+  map(() => getElementScale()),
+  map(v => element$.next(v)),
 ).subscribe()
-
-/**
- * 订阅scale值，缩放元素及更新样式规则.
- */
-scale$.subscribe((scale) => {
-  elements.forEach((options, element) => setElementScale(element, scale, options))
-  updateRule()
-})
 
 /** 计算 transform 的值 */
 function calcTransform(seed: Required<TransformType>, event: WheelEvent) {
@@ -131,12 +120,4 @@ function setBodyTransform(transform: TransformType) {
   })
   body.setAttribute('data-scale', `${scale}`)
   return { scale, x, y }
-}
-
-/** 获取 transform 值 */
-function getTransformValue(el: HTMLElement) {
-  const match = el.style.transform.match(/translate\((-?\d+(?:\.\d*)?)px, (-?\d+(?:\.\d*)?)px\)/)
-  if (match)
-    return { x: Number(match[1]), y: Number(match[2]) }
-  return { x: 0, y: 0 }
 }
