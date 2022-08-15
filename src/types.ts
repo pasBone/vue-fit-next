@@ -40,7 +40,18 @@ export interface ElementOptions extends Animate {
   /** 缩放值 */
   scale: number
 
+  /** translateX */
+  x: number
+
+  /** translateY */
+  y: number
+
+  /** nanoId */
+  nanoId: string
+
   /** 出场入场动画 */
   animate?: Animate
 
 }
+
+export type RequiredAnimateType = Required<AnimateType>
