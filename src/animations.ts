@@ -1,19 +1,16 @@
-import { elements, getElementScale } from './fit'
-import type { AnimateNames, AnimateType, ElementOptions, FitOptions } from './types'
-
-type RequiredAnimateType = Required<AnimateType>
+import { defaultFitOptions, element$, elements } from './fit'
+import type { AnimateNames, ElementOptions, FitOptions, RequiredAnimateType } from './types'
+import { getTranslateValue } from './utils'
 
 let styleSheet: CSSStyleSheet | null = null
 
-let defaultFitOptions: FitOptions
 /**
  * @description 给元素添加出场/入场动画
  * @param el
- * @param elementOptions
- * @param defaultFitOptions
+ * @param fitOptions
  */
-export function setAnimate(el: HTMLElement, elementOptions: ElementOptions, fitOptions: FitOptions) {
-  defaultFitOptions = fitOptions
+export function setAnimate(el: HTMLElement, fitOptions: FitOptions) {
+  const elementOptions = elements.get(el)!
   // 动态创建 styleSheet
   if (styleSheet === null)
     createStyleSheet()
@@ -64,9 +61,13 @@ export function setAnimate(el: HTMLElement, elementOptions: ElementOptions, fitO
  * @param animate
  */
 export function addAnimateProps(el: HTMLElement, animate: RequiredAnimateType) {
-  if (animate.name) {
+  if (animate && animate.name) {
+    const { scale, nanoId } = elements.get(el)!
+    const { x, y } = getTranslateValue(el)
+    const rules = setAnimationFrames(scale, x, y, nanoId)[animate.name]
+    styleSheet?.insertRule(rules)
     Object.assign(el.style, {
-      animationName: animate.name,
+      animationName: `${animate.name}_${nanoId}`,
       animationDelay: `${animate.delay}ms`,
       animationDuration: `${animate.duration}ms`,
       animationFillMode: 'both',
@@ -81,7 +82,7 @@ export function addAnimateProps(el: HTMLElement, animate: RequiredAnimateType) {
  */
 export function leave(parent: HTMLElement, remove: Function) {
   const fitElements: NodeListOf<HTMLElement> = parent.querySelectorAll('[data-fit]')
-
+  removeRules()
   fitElements.forEach((el) => {
     const options = elements.get(el) as Required<ElementOptions>
     const leave = options.animate.leave as RequiredAnimateType
@@ -106,19 +107,10 @@ function createStyleSheet() {
   const head = document.getElementsByTagName('head')[0]
   head.appendChild(style)
   styleSheet = style.sheet
-  insertRule()
-}
-
-/** insert animate css rules */
-function insertRule() {
-  const scale = getElementScale(1)
-  const rules = setAnimationFrames(scale)
-  for (const key in rules)
-    styleSheet?.insertRule(rules[key as AnimateNames])
 }
 
 /** remove animate css rules */
-function removeRule() {
+function removeRules() {
   const rules = styleSheet?.cssRules
   if (rules) {
     while (rules.length)
@@ -127,96 +119,112 @@ function removeRule() {
 }
 
 /** update animate css rules */
-export function updateRule() {
-  removeRule()
-  insertRule()
+export function updateRules(el: HTMLElement) {
+  const { scale, x, y, nanoId, animate } = elements.get(el)!
+  if (animate && typeof animate.enter === 'object' && animate.enter.name) {
+    const rules = setAnimationFrames(scale, x, y, nanoId)[animate.enter.name as AnimateNames]
+    styleSheet?.insertRule(rules)
+  }
 }
 
 /** animation frames */
-function setAnimationFrames(scale: number): Record<AnimateNames, string> {
+function setAnimationFrames(scale: number, x: number, y: number, nanoId: string): Record<AnimateNames, string> {
   if (defaultFitOptions.mode === 'zoom')
     scale = 1
 
   return {
 
-    slideInLeft: `@keyframes slideInLeft {
+    slideInLeft: `@keyframes slideInLeft_${nanoId} {
       from {
-        transform: scale(${scale}, ${scale}) translate3d(-100%, 0, 0);
+        transform: translate3d(-100%, 0, 0) scale(${scale}, ${scale});
         visibility: visible;
       }
       to {
-        transform: scale(${scale}, ${scale}) translate3d(0, 0, 0);
+        transform: translate3d(${x}px, ${y}px, 0) scale(${scale}, ${scale});
       }
     }`,
 
-    slideInRight: `@keyframes slideInRight {
+    slideInRight: `@keyframes slideInRight_${nanoId} {
       from {
-        transform: scale(${scale}, ${scale}) translate3d(100%, 0, 0);
+        transform: translate3d(100%, 0, 0) scale(${scale}, ${scale});
         visibility: visible;
       }
       to {
-        transform: scale(${scale}, ${scale}) translate3d(0, 0, 0);
+        transform: translate3d(${x}px, ${y}px, 0) scale(${scale}, ${scale});
       }
     }`,
 
-    slideOutLeft: `@keyframes slideOutLeft {
+    slideOutLeft: `@keyframes slideOutLeft_${nanoId} {
       from {
-        transform: scale(${scale}, ${scale}) translate3d(0, 0, 0);
+        transform: translate3d(${x}px, ${y}px, 0) scale(${scale}, ${scale});
       }
       to {
         visibility: hidden;
-        transform: scale(${scale}, ${scale}) translate3d(-100%, 0, 0);
+        transform: translate3d(-100%, 0, 0) scale(${scale}, ${scale});
       }
     }`,
 
-    slideOutRight: `@keyframes slideOutRight {
+    slideOutRight: `@keyframes slideOutRight_${nanoId} {
       from {
-        transform: scale(${scale}, ${scale}) translate3d(0, 0, 0);
+        transform: translate3d(${x}px, ${y}px, 0) scale(${scale}, ${scale});
       }
       to {
         visibility: hidden;
-        transform: scale(${scale}, ${scale}) translate3d(100%, 0, 0);
+        transform: translate3d(100%, 0, 0) scale(${scale}, ${scale});
       }
     }`,
 
-    slideInUp: `@keyframes slideInUp {
+    slideInUp: `@keyframes slideInUp_${nanoId} {
       from {
-        transform: scale(${scale}, ${scale}) translate3d(0, -100%, 0);
+        transform: translate3d(0, -100%, 0) scale(${scale}, ${scale});
         visibility: visible;
       }
       to {
-        transform: scale(${scale}, ${scale}) translate3d(0, 0, 0);
+        transform: translate3d(${x}px, ${y}px, 0) scale(${scale}, ${scale});
       }
     }`,
 
-    slideInDown: `@keyframes slideInDown {
+    slideInDown: `@keyframes slideInDown_${nanoId} {
       from {
-        transform: scale(${scale}, ${scale}) translate3d(0, 100%, 0);
+        transform: translate3d(0, 100%, 0) scale(${scale}, ${scale});
         visibility: visible;
       }
       to {
-        transform: scale(${scale}, ${scale}) translate3d(0, 0, 0);
+        transform: translate3d(${x}px, ${y}px, 0) scale(${scale}, ${scale});
       }
     }`,
 
-    slideOutUp: `@keyframes slideOutUp {
+    slideOutUp: `@keyframes slideOutUp_${nanoId} {
       from {
-        transform: scale(${scale}, ${scale}) translate3d(0, 0, 0);
+        transform: translate3d(${x}, ${y}, 0) scale(${scale}, ${scale});
       }
       to {
         visibility: hidden;
-        transform: scale(${scale}, ${scale}) translate3d(0, -100%, 0);
+        transform: translate3d(0, -100%, 0) scale(${scale}, ${scale});
       }
     }`,
 
-    slideOutDown: `@keyframes slideOutDown {
+    slideOutDown: `@keyframes slideOutDown_${nanoId} {
       from {
-        transform: scale(${scale}, ${scale}) translate3d(0, 0, 0);
+        transform: translate3d(${x}, ${y}, 0) scale(${scale}, ${scale});
       }
       to {
         visibility: hidden;
-        transform: scale(${scale}, ${scale}) translate3d(0, 100%, 0);
+        transform: translate3d(0, 100%, 0) scale(${scale}, ${scale});
       }
     }`,
   }
 }
+
+element$.subscribe((value) => {
+  if (typeof value === 'number') {
+    removeRules()
+    elements.forEach((opt, el) => {
+      updateRules(el)
+    })
+  }
+  else {
+    // 初始化给每个元素添加动画
+    setAnimate(value, defaultFitOptions)
+  }
+})
