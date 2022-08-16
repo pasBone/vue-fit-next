@@ -2,40 +2,11 @@
 import { Subject } from 'rxjs'
 import type { DirectiveBinding, ObjectDirective } from 'vue'
 import { nanoId } from './utils'
-import type { ElementOptions, FitOptions, TransformOrigin } from './types'
+import type { ElementOptions, FitOptions, Lock, Origin } from './types'
 import './events' // 事件相关
 
 /** 元素的变换值. */
-export const element$ = new Subject<HTMLElement | number>()
-
-/**
- *  -----------
- * | 1 | 2 | 3 |
- *  -----------
- * | 4 | 5 | 6 |
- *  -----------
- * | 7 | 8 | 9 |
- *  -----------
- */
-
-export const TRANSFORM_ORIGIN = {
-  // 上边部分
-  1: 'left top',
-  2: 'center top',
-  3: 'right top',
-  // 中间部分
-  4: 'left top',
-  5: 'center center',
-  6: 'right center',
-  // 下边部分
-  7: 'left top',
-  8: 'center bottom',
-  9: 'right bottom',
-  // 上部分简写
-  left: 'left top',
-  center: 'center top',
-  right: 'right top',
-}
+export const element$ = new Subject<HTMLElement | null>()
 
 /** 默认全局的配置  */
 export let defaultFitOptions: FitOptions
@@ -46,18 +17,12 @@ export const elements = new Map<HTMLElement, ElementOptions>()
 /**
  * 根据窗口大小计算元素的比例.
  */
-export function getElementScale(): number {
-  // const vertical = ['1', '4', '7', '3', '6', '9', 'left']
-  // const horizontal = ['2', '8', 'right']
-  // const center = [5, 'center']
-  // if (vertical.includes(origin))
-  //   return window.innerHeight / defaultFitOptions.height
+export function getElementScale(lock: Lock): number {
+  if (lock.x)
+    return window.innerHeight / defaultFitOptions.height
 
-  // if (horizontal.includes(origin))
-  //   return window.innerWidth / defaultFitOptions.width
-
-  // if (center.includes(origin))
-  //   return (window.innerWidth / defaultFitOptions.width + window.innerHeight / defaultFitOptions.height) / 2
+  if (lock.y)
+    return window.innerWidth / defaultFitOptions.width
 
   const w = window.innerWidth / defaultFitOptions.width
   const h = window.innerHeight / defaultFitOptions.height
@@ -65,11 +30,26 @@ export function getElementScale(): number {
   return scale
 }
 
-function getTranslate(el: HTMLElement, scale: number, origin: TransformOrigin) {
-  if (origin === '3' || origin === 'right')
-    return { x: el.clientWidth - el.clientWidth * scale, y: 0 }
-
-  return { x: 0, y: 0 }
+function getTranslate(el: HTMLElement, scale: number, origin: Origin) {
+  let translate = { x: 0, y: 0 }
+  switch (origin) {
+    case 'top':
+      translate = { x: 0, y: 0 }
+      break
+    case 'right':
+      translate = { x: el.clientWidth - el.clientWidth * scale, y: 0 }
+      break
+    case 'bottom':
+      translate = { x: el.clientWidth - el.clientWidth * scale, y: window.innerHeight - el.clientHeight * scale }
+      break
+    case 'left':
+      translate = { x: 0, y: window.innerHeight - el.clientHeight * scale }
+      break
+    case 'center':
+      translate = { x: (window.innerWidth - el.clientWidth * scale) / 2, y: 0 }
+      break
+  }
+  return translate
 }
 
 /**
@@ -113,13 +93,16 @@ export function directiveHooks(fitOptions: FitOptions): ObjectDirective {
 
   return {
     mounted(el: HTMLElement, binding: DirectiveBinding) {
-      const scale = getElementScale()
       const id = nanoId(8)
       el.dataset.fit = id
 
       const { arg, value } = binding
 
-      const origin = value?.origin || arg || 'left'
+      const origin = value?.origin || arg || 'top'
+
+      const lock = Object.assign({ x: false, y: false }, value?.lock)
+
+      const scale = getElementScale(lock)
 
       // 添加基本属性值
       setElementOptions(el, {
@@ -127,6 +110,7 @@ export function directiveHooks(fitOptions: FitOptions): ObjectDirective {
         origin,
         scale,
         nanoId: id,
+        lock,
       })
     },
 
@@ -140,9 +124,10 @@ export function directiveHooks(fitOptions: FitOptions): ObjectDirective {
  * 订阅 element，缩放元素及更新样式规则.
  */
 element$.subscribe((value) => {
-  if (typeof value === 'number') {
+  if (value === null) {
     elements.forEach((opt, el) => {
-      setElementOptions(el, { scale: value })
+      const scale = getElementScale(opt.lock)
+      setElementOptions(el, { scale })
       setElementTransform(el)
     })
   }
