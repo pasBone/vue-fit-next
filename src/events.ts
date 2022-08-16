@@ -91,8 +91,7 @@ bodyTransform$.pipe(
  */
 resize$.pipe(
   throttleTime(10),
-  map(() => getElementScale()),
-  map(v => element$.next(v)),
+  map(() => element$.next(null)),
 ).subscribe()
 
 /** 计算 transform 的值 */
