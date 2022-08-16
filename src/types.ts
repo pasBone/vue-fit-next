@@ -1,5 +1,3 @@
-import type { TRANSFORM_ORIGIN } from './fit'
-
 export type AnimateNames = 'slideInLeft' | 'slideInRight' | 'slideOutLeft' | 'slideOutRight' | 'slideInUp' | 'slideInDown' | 'slideOutUp' | 'slideOutDown'
 
 export interface AnimateType {
@@ -17,7 +15,13 @@ export interface Animate {
   leave?: AnimateType | AnimateNames
 }
 
-export type TransformOrigin = `${keyof typeof TRANSFORM_ORIGIN}`
+/** 位置对齐方式，和CSS margin 的书写顺序一样：上右下左中 */
+export type Origin = 'top' | 'right' | 'bottom' | 'left' | 'center'
+
+export interface Lock {
+  x: number
+  y: number
+}
 
 /** 指令注册时全局的配置 */
 export interface FitOptions {
@@ -35,7 +39,7 @@ export interface FitOptions {
 export interface ElementOptions extends Animate {
 
   /** 组件在css中的变换中心位置 */
-  origin: TransformOrigin
+  origin: Origin
 
   /** 缩放值 */
   scale: number
@@ -45,6 +49,9 @@ export interface ElementOptions extends Animate {
 
   /** translateY */
   y: number
+
+  /** 锁定 x 轴或者 y 轴 */
+  lock: Lock
 
   /** nanoId */
   nanoId: string
