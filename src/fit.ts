@@ -2,7 +2,7 @@
 import { Subject } from 'rxjs'
 import type { DirectiveBinding, ObjectDirective } from 'vue'
 import { nanoId } from './utils'
-import type { ElementOptions, FitOptions, Lock, Origin } from './types'
+import type { ElementOptions, FitOptions, Origin } from './types'
 import './events' // 事件相关
 
 /** 元素的变换值. */
@@ -17,12 +17,17 @@ export const elements = new Map<HTMLElement, ElementOptions>()
 /**
  * 根据窗口大小计算元素的比例.
  */
-export function getElementScale(lock: Lock): number {
+export function getElementScale(lock: { x: boolean; y: boolean }): number {
+  const scaleX = window.innerWidth / defaultFitOptions.width
+  const scaleY = window.innerHeight / defaultFitOptions.height
+  if (lock.x && lock.y)
+    return (scaleX + scaleY) / 2
+
   if (lock.x)
-    return window.innerHeight / defaultFitOptions.height
+    return scaleY
 
   if (lock.y)
-    return window.innerWidth / defaultFitOptions.width
+    return scaleX
 
   const w = window.innerWidth / defaultFitOptions.width
   const h = window.innerHeight / defaultFitOptions.height
@@ -31,19 +36,22 @@ export function getElementScale(lock: Lock): number {
 }
 
 function getTranslate(el: HTMLElement, scale: number, origin: Origin) {
-  let translate = { x: 0, y: 0 }
+  const offsetTop = el.offsetTop
+  const offsetLeft = el.offsetLeft
+
+  let translate = { x: -offsetLeft + offsetLeft * scale, y: -offsetTop + offsetTop * scale }
   switch (origin) {
     case 'top':
-      translate = { x: 0, y: 0 }
+      translate = { ...translate }
       break
     case 'right':
-      translate = { x: el.clientWidth - el.clientWidth * scale, y: 0 }
+      translate = { x: (el.clientWidth - el.clientWidth * scale), y: -offsetTop + offsetTop * scale }
       break
     case 'bottom':
-      translate = { x: el.clientWidth - el.clientWidth * scale, y: window.innerHeight - el.clientHeight * scale }
+      translate = { x: el.clientWidth - el.clientWidth * scale, y: (window.innerHeight - el.clientHeight * scale) - offsetTop }
       break
     case 'left':
-      translate = { x: 0, y: window.innerHeight - el.clientHeight * scale }
+      translate = { x: -offsetLeft + offsetLeft * scale, y: (window.innerHeight - el.clientHeight * scale) - offsetTop }
       break
     case 'center':
       translate = { x: (window.innerWidth - el.clientWidth * scale) / 2, y: 0 }
@@ -100,9 +108,10 @@ export function directiveHooks(fitOptions: FitOptions): ObjectDirective {
 
       const origin = value?.origin || arg || 'top'
 
-      const lock = Object.assign({ x: false, y: false }, value?.lock)
+      const lockX = value?.lockX || false
+      const lockY = value?.lockY || false
 
-      const scale = getElementScale(lock)
+      const scale = getElementScale({ x: lockX, y: lockY })
 
       // 添加基本属性值
       setElementOptions(el, {
@@ -110,7 +119,8 @@ export function directiveHooks(fitOptions: FitOptions): ObjectDirective {
         origin,
         scale,
         nanoId: id,
-        lock,
+        lockX,
+        lockY,
       })
     },
 
@@ -126,7 +136,7 @@ export function directiveHooks(fitOptions: FitOptions): ObjectDirective {
 element$.subscribe((value) => {
   if (value === null) {
     elements.forEach((opt, el) => {
-      const scale = getElementScale(opt.lock)
+      const scale = getElementScale({ x: opt.lockX, y: opt.lockY })
       setElementOptions(el, { scale })
       setElementTransform(el)
     })

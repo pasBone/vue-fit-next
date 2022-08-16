@@ -18,11 +18,6 @@ export interface Animate {
 /** 位置对齐方式，和CSS margin 的书写顺序一样：上右下左中 */
 export type Origin = 'top' | 'right' | 'bottom' | 'left' | 'center'
 
-export interface Lock {
-  x: number
-  y: number
-}
-
 /** 指令注册时全局的配置 */
 export interface FitOptions {
   /** 设计稿的宽度 */
@@ -51,7 +46,8 @@ export interface ElementOptions extends Animate {
   y: number
 
   /** 锁定 x 轴或者 y 轴 */
-  lock: Lock
+  lockX: boolean
+  lockY: boolean
 
   /** nanoId */
   nanoId: string
