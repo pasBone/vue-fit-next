@@ -1,5 +1,5 @@
 import { BehaviorSubject, bufferWhen, debounceTime, filter, fromEvent, map, mergeMap, scan, switchMap, takeUntil, tap, throttleTime } from 'rxjs'
-import { element$, getElementScale } from './fit'
+import { element$ } from './fit'
 import { getTranslateValue } from './utils'
 
 /** 设置 body transform */
