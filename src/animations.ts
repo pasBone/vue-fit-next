@@ -136,7 +136,7 @@ function setAnimationFrames(scale: number, x: number, y: number, nanoId: string)
 
     slideInLeft: `@keyframes slideInLeft_${nanoId} {
       from {
-        transform: translate3d(-100%, 0, 0) scale(${scale}, ${scale});
+        transform: translate3d(-100%, ${y}px, 0) scale(${scale}, ${scale});
         visibility: visible;
       }
       to {
@@ -146,7 +146,7 @@ function setAnimationFrames(scale: number, x: number, y: number, nanoId: string)
 
     slideInRight: `@keyframes slideInRight_${nanoId} {
       from {
-        transform: translate3d(100%, 0, 0) scale(${scale}, ${scale});
+        transform: translate3d(100%, ${y}px, 0) scale(${scale}, ${scale});
         visibility: visible;
       }
       to {
@@ -160,7 +160,7 @@ function setAnimationFrames(scale: number, x: number, y: number, nanoId: string)
       }
       to {
         visibility: hidden;
-        transform: translate3d(-100%, 0, 0) scale(${scale}, ${scale});
+        transform: translate3d(-100%, ${y}px, 0) scale(${scale}, ${scale});
       }
     }`,
 
@@ -170,13 +170,13 @@ function setAnimationFrames(scale: number, x: number, y: number, nanoId: string)
       }
       to {
         visibility: hidden;
-        transform: translate3d(100%, 0, 0) scale(${scale}, ${scale});
+        transform: translate3d(100%, ${y}px, 0) scale(${scale}, ${scale});
       }
     }`,
 
     slideInUp: `@keyframes slideInUp_${nanoId} {
       from {
-        transform: translate3d(0, -100%, 0) scale(${scale}, ${scale});
+        transform: translate3d(${x}px, -100%, 0) scale(${scale}, ${scale});
         visibility: visible;
       }
       to {
@@ -186,7 +186,7 @@ function setAnimationFrames(scale: number, x: number, y: number, nanoId: string)
 
     slideInDown: `@keyframes slideInDown_${nanoId} {
       from {
-        transform: translate3d(0, 100%, 0) scale(${scale}, ${scale});
+        transform: translate3d(${x}px, 100%, 0) scale(${scale}, ${scale});
         visibility: visible;
       }
       to {
@@ -200,7 +200,7 @@ function setAnimationFrames(scale: number, x: number, y: number, nanoId: string)
       }
       to {
         visibility: hidden;
-        transform: translate3d(0, -100%, 0) scale(${scale}, ${scale});
+        transform: translate3d(${x}px, -100%, 0) scale(${scale}, ${scale});
       }
     }`,
 
@@ -210,14 +210,14 @@ function setAnimationFrames(scale: number, x: number, y: number, nanoId: string)
       }
       to {
         visibility: hidden;
-        transform: translate3d(0, 100%, 0) scale(${scale}, ${scale});
+        transform: translate3d(${x}px, 100%, 0) scale(${scale}, ${scale});
       }
     }`,
   }
 }
 
 element$.subscribe((value) => {
-  if (typeof value === 'number') {
+  if (value === null) {
     removeRules()
     elements.forEach((opt, el) => {
       updateRules(el)
