@@ -1,5 +1,5 @@
 <template>
-  <div v-fit:2 class="header">
+  <div v-fit:center class="header">
     <div class="header-bg" />
   </div>
 </template>

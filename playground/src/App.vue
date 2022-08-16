@@ -18,7 +18,8 @@ function onEnter(el) {
     <div v-if="show" class="box">
       <div
         v-fit="{
-          origin: 'left',
+          origin: 'top',
+          lock: { x: true },
           animate: {
             enter: {
               name: 'slideInLeft',
@@ -76,7 +77,7 @@ function onEnter(el) {
       </div>
 
       <div
-        v-fit:right="{
+        v-fit:bottom="{
           animate: {
             enter: 'slideInRight',
             leave: 'slideOutRight',
@@ -148,10 +149,9 @@ body {
 }
 
 .right {
-  width: 400px;
-  height: 100vh;
+  width: 675px;
+  height: 2025px;
   background: blue;
-  transform-origin: center;
 }
 
 .top {
