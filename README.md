@@ -90,11 +90,11 @@ app
     <div v-fit:right>缩放中心 transform-origin: right top</div>
   ```
 
-2. 使用 origin 属性也是同样的效果
-  ```html
-  <div v-fit="{origin: 'left'}">缩放中心 transform-origin: left top</div>
-  <div v-fit="{origin: '1'}">缩放中心 transform-origin: left top</div>
-  ```
+2. 使用 origin 属性代替上面:left的写法
+```html
+<div v-fit="{origin: 'left'}">缩放中心 transform-origin: left top</div>
+<div v-fit="{origin: '1'}">缩放中心 transform-origin: left top</div>
+```
 
 3. 也可以直接通过css样式去设置 transform-origin 达到同样的效果
 
@@ -111,10 +111,10 @@ app
 
 目前内置了以下几种出/入动画
 
-slideInLeft | slideInRight 
-slideOutLeft | slideOutRight 
-slideInUp | slideInDown
-slideOutUp | slideOutDown
+- slideInLeft | slideInRight 
+- slideOutLeft | slideOutRight 
+- slideInUp | slideInDown
+- slideOutUp | slideOutDown
 
 ### 使用方式
 
@@ -164,20 +164,20 @@ const animate = {
 2. 单个组件指令
    
 ```html
-  <div
-    v-fit="{
-      origin: 'left',
-      animate: {
-        enter: {
-          name: 'slideInLeft',
-          duration: 800,
-        },
-        leave: 'slideOutLeft',   // 也可以直接提供动画名称的方式简写
+<div
+  v-fit="{
+    origin: 'left',
+    animate: {
+      enter: {
+        name: 'slideInLeft',
+        duration: 800,
       },
-    }"
-    class="left"
-  >
-  </div>
+      leave: 'slideOutLeft',   // 也可以直接提供动画名称的方式简写
+    },
+  }"
+  class="left"
+>
+</div>
 ```
 `enter` 和 `leave` 可以直接简写成动画名称，`duration`和`delay`则从全局继承，也可以单个组件覆盖全局。
 
@@ -195,32 +195,32 @@ import { leave } from 'vue-fit-next'
 `Transition` 包裹组件即可
 
 ```html
- <Transition mode="out-in" :css="false" @leave="leave">
-  <div v-if="show" class="box">
-      <div
-        v-fit="{
-          origin: 'left',
-          animate: {
-            enter: 'slideInLeft',
-            leave: 'slideOutLeft',
-          },
-        }"
-      >
-        left-1
-      </div>
-
-      <div
-        v-fit:right="{
-          animate: {
-            enter: 'slideInRight',
-            leave: 'slideOutRight',
-          },
-        }"
-      >
-        right-1
-      </div>
+<Transition mode="out-in" :css="false" @leave="leave">
+<div v-if="show" class="box">
+    <div
+      v-fit="{
+        origin: 'left',
+        animate: {
+          enter: 'slideInLeft',
+          leave: 'slideOutLeft',
+        },
+      }"
+    >
+      left-1
     </div>
- </Transition>
+
+    <div
+      v-fit:right="{
+        animate: {
+          enter: 'slideInRight',
+          leave: 'slideOutRight',
+        },
+      }"
+    >
+      right-1
+    </div>
+  </div>
+</Transition>
 
 ```
 ## License

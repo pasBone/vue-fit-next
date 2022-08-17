@@ -1,5 +1,3 @@
-import type { TRANSFORM_ORIGIN } from './fit'
-
 export type AnimateNames = 'slideInLeft' | 'slideInRight' | 'slideOutLeft' | 'slideOutRight' | 'slideInUp' | 'slideInDown' | 'slideOutUp' | 'slideOutDown'
 
 export interface AnimateType {
@@ -17,6 +15,9 @@ export interface Animate {
   leave?: AnimateType | AnimateNames
 }
 
+/** 位置对齐方式 */
+export type Origin = 'left' | 'right' | 'center' | 'leftTop' | 'leftCenter' | 'leftBottom' | 'centerTop' | 'centerBottom' | 'centerCenter' | 'rightTop' | 'rightCenter' | 'rightBottom'
+
 /** 指令注册时全局的配置 */
 export interface FitOptions {
   /** 设计稿的宽度 */
@@ -32,13 +33,28 @@ export interface FitOptions {
 /** 单个组件的个性配置 */
 export interface ElementOptions extends Animate {
 
-  /** 组件在css中的变换中心位置，也可以忽略此配置直接使用 css 如：transform-origin: left top; */
-  origin: keyof typeof TRANSFORM_ORIGIN
+  /** 组件在css中的变换中心位置 */
+  origin: Origin
 
   /** 缩放值 */
   scale: number
+
+  /** translateX */
+  x: number
+
+  /** translateY */
+  y: number
+
+  /** 锁定 x 轴或者 y 轴 */
+  lockX: boolean
+  lockY: boolean
+
+  /** nanoId */
+  nanoId: string
 
   /** 出场入场动画 */
   animate?: Animate
 
 }
+
+export type RequiredAnimateType = Required<AnimateType>
