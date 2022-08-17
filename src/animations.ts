@@ -83,6 +83,9 @@ export function addAnimateProps(el: HTMLElement, animate: RequiredAnimateType) {
 export function leave(parent: HTMLElement, remove: Function) {
   const fitElements: NodeListOf<HTMLElement> = parent.querySelectorAll('[data-fit]')
   removeRules()
+
+  let animateElementCount = 0
+
   fitElements.forEach((el) => {
     const options = elements.get(el) as Required<ElementOptions>
     const leave = options.animate.leave as RequiredAnimateType
@@ -92,11 +95,13 @@ export function leave(parent: HTMLElement, remove: Function) {
         e.stopPropagation()
         remove()
       })
-    }
-    else {
-      remove()
+      if (leave.name !== null)
+        animateElementCount++
     }
   })
+
+  if (fitElements.length === 0 || animateElementCount === 0)
+    setTimeout(remove)
 }
 
 /** create style sheet */
