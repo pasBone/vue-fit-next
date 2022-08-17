@@ -1,7 +1,7 @@
 /* eslint-disable import/no-mutable-exports */
 import { Subject } from 'rxjs'
 import type { DirectiveBinding, ObjectDirective } from 'vue'
-import { nanoId } from './utils'
+import { getComputedStyleNumber, nanoId } from './utils'
 import type { ElementOptions, FitOptions, Origin } from './types'
 import './events' // 事件相关
 
@@ -38,26 +38,74 @@ export function getElementScale(lock: { x: boolean; y: boolean }): number {
 function getTranslate(el: HTMLElement, scale: number, origin: Origin) {
   const offsetTop = el.offsetTop
   const offsetLeft = el.offsetLeft
+  const offsetRight = (getComputedStyleNumber(el, 'right') + getComputedStyleNumber(el, 'margin-right'))
+  const offsetBottom = (getComputedStyleNumber(el, 'bottom') + getComputedStyleNumber(el, 'margin-bottom'))
 
-  let translate = { x: -offsetLeft + offsetLeft * scale, y: -offsetTop + offsetTop * scale }
-  switch (origin) {
-    case 'top':
-      translate = { ...translate }
-      break
-    case 'right':
-      translate = { x: (el.clientWidth - el.clientWidth * scale), y: -offsetTop + offsetTop * scale }
-      break
-    case 'bottom':
-      translate = { x: el.clientWidth - el.clientWidth * scale, y: (window.innerHeight - el.clientHeight * scale) - offsetTop }
-      break
-    case 'left':
-      translate = { x: -offsetLeft + offsetLeft * scale, y: (window.innerHeight - el.clientHeight * scale) - offsetTop }
-      break
-    case 'center':
-      translate = { x: (window.innerWidth - el.clientWidth * scale) / 2, y: 0 }
-      break
+  if (origin === 'left' || origin === 'leftTop') {
+    return {
+      x: -offsetLeft + offsetLeft * scale,
+      y: -offsetTop + offsetTop * scale,
+    }
   }
-  return translate
+
+  if (origin === 'center' || origin === 'centerTop') {
+    return {
+      x: (window.innerWidth - (el.clientWidth * scale)) / 2,
+      y: -offsetTop + offsetTop * scale,
+    }
+  }
+
+  if (origin === 'right' || origin === 'rightTop') {
+    return {
+      // x: (el.clientWidth - el.clientWidth * scale) + offsetRight * scale,
+      x: offsetRight - offsetRight * scale,
+      y: -offsetTop + offsetTop * scale,
+    }
+  }
+
+  if (origin === 'leftCenter') {
+    return {
+      x: -offsetLeft + offsetLeft * scale,
+      y: (window.innerHeight - (el.clientHeight * scale)) / 2,
+    }
+  }
+
+  if (origin === 'centerCenter') {
+    return {
+      x: (window.innerWidth - (el.clientWidth * scale)) / 2,
+      y: (window.innerHeight - (el.clientHeight * scale)) / 2,
+    }
+  }
+
+  if (origin === 'rightCenter') {
+    return {
+      x: offsetRight - offsetRight * scale,
+      y: (window.innerHeight - (el.clientHeight * scale)) / 2,
+    }
+  }
+
+  if (origin === 'leftBottom') {
+    return {
+      x: -offsetLeft + offsetLeft * scale,
+      y: offsetBottom - offsetBottom * scale,
+    }
+  }
+
+  if (origin === 'centerBottom') {
+    return {
+      x: (window.innerWidth - (el.clientWidth * scale)) / 2,
+      y: offsetBottom - offsetBottom * scale,
+    }
+  }
+
+  if (origin === 'rightBottom') {
+    return {
+      x: offsetRight - offsetRight * scale,
+      y: offsetBottom - offsetBottom * scale,
+    }
+  }
+
+  return { x: 0, y: 0 }
 }
 
 /**
@@ -70,11 +118,26 @@ export function setElementTransform(el: HTMLElement) {
     Object.assign(el.style, { zoom: scale })
   }
   else {
+    const originMap = {
+      left: 'left top',
+      center: 'left top',
+      right: 'right top',
+      leftTop: 'left top',
+      leftCenter: 'left top',
+      leftBottom: 'left bottom',
+
+      centerTop: 'left top',
+      centerCenter: 'left top',
+      centerBottom: 'left bottom',
+      rightTop: 'right top',
+      rightCenter: 'right top',
+      rightBottom: 'right bottom',
+    }
     Object.assign(el.style, {
       // transformOrigin: TRANSFORM_ORIGIN[options.origin],
       // transform: el.style.transform.replace(/scale\(.+?\)/g, scaleStr),
       // transform: `matrix(${scale}, 0, 0, ${scale}, ${getTranslate(el, scale, options.origin)})`,
-      transformOrigin: 'left top',
+      transformOrigin: originMap[origin],
       transform: `translate(${x}px, ${y}px) scale(${scale}, ${scale})`,
     })
   }
@@ -106,7 +169,7 @@ export function directiveHooks(fitOptions: FitOptions): ObjectDirective {
 
       const { arg, value } = binding
 
-      const origin = value?.origin || arg || 'top'
+      const origin = value?.origin || arg || ''
 
       const lockX = value?.lockX || false
       const lockY = value?.lockY || false
