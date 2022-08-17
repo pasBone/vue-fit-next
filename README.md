@@ -14,8 +14,10 @@
 
 ## 预览
 
-[scale 模式](https://62fca80a83bbdb00082f2b14--tranquil-baklava-24da8b.netlify.app/demo-scale-mode)
-[zoom 模式](https://62fca80a83bbdb00082f2b14--tranquil-baklava-24da8b.netlify.app/demo-zoom-mode)
+- [scale 模式](https://62fca80a83bbdb00082f2b14--tranquil-baklava-24da8b.netlify.app/demo-scale-mode)
+- [zoom 模式](https://62fca80a83bbdb00082f2b14--tranquil-baklava-24da8b.netlify.app/demo-zoom-mode)
+
+![](https://github.com/pasBone/vue-fit-next/blob/dev/playground/public/gif.gif)
 
 ## 安装
 
