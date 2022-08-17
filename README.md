@@ -49,7 +49,7 @@ app
 
 ```html
 <div v-fit>
-  添加 v-fit 指令的元素会根据屏幕尺寸和预设的设计稿尺寸进行缩放
+  添加 `v-fit` 指令的元素会根据屏幕尺寸和预设的设计稿尺寸进行缩放
 </div>
 ```
 
@@ -64,16 +64,15 @@ app
 
 优点：
 
-配合 v-fit 食用更简单，完全不用考虑 v-fit 定义的布局概念，直接使用 css 就能完成你想要的布局和适配。
+配合 v-fit 食用更简单，完全不用考虑 `v-fit` 定义的布局概念，直接使用 `css` 就能完成你想要的布局和适配。
 
 
 ## 使用 scale 模式
 
 `scale` 模式是采用的 css 的 scale 属性进行缩放。
 
-`scale` 模式配合 v-fit 使用前需要了解一些 v-fit 对布局增加的属性概念：
+`scale` 模式配合 `v-fit` 使用前需要了解一些 `v-fit` 对布局增加的属性概念：
 
-'left' | 'right' | 'center' | 'leftTop' | 'leftCenter' | 'leftBottom' | 'centerTop' | 'centerBottom' | 'centerCenter' | 'rightTop' | 'rightCenter' | 'rightBottom'
 
 ### 布局方式
 
