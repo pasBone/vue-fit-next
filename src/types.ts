@@ -15,8 +15,8 @@ export interface Animate {
   leave?: AnimateType | AnimateNames
 }
 
-/** 位置对齐方式，和CSS margin 的书写顺序一样：上右下左中 */
-export type Origin = 'top' | 'right' | 'bottom' | 'left' | 'center'
+/** 位置对齐方式 */
+export type Origin = 'left' | 'right' | 'center' | 'leftTop' | 'leftCenter' | 'leftBottom' | 'centerTop' | 'centerBottom' | 'centerCenter' | 'rightTop' | 'rightCenter' | 'rightBottom'
 
 /** 指令注册时全局的配置 */
 export interface FitOptions {
