@@ -3,12 +3,14 @@ import { leave } from 'vue-fit-next'
 import { ref, shallowRef } from 'vue'
 import view001 from './view-001/index.vue'
 import view002 from './view-002/index.vue'
+import view003 from './view-003/index.vue'
 import Header from '~/components/Header/index.vue'
 
-const component = shallowRef(view002)
+const component = shallowRef(view001)
 const componentsMap = {
   1: view001,
   2: view002,
+  3: view003,
 }
 
 function changeView(viewName) {
@@ -25,12 +27,15 @@ function changeView(viewName) {
     <component :is="component" />
   </Transition>
 
-  <div v-fit:center class="action">
+  <div v-fit:centerBottom class="action">
     <div class="menu-btn" @click="changeView('1')">
       视图-001
     </div>
     <div class="menu-btn" @click="changeView('2')">
       视图-002
+    </div>
+    <div class="menu-btn" @click="changeView('3')">
+      视图-003
     </div>
   </div>
 </template>
@@ -48,7 +53,7 @@ function changeView(viewName) {
 }
 .action {
   position: absolute;
-  bottom: 0;
+  bottom: 60px;
   left: 0;
   display: flex;
 }

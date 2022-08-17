@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      v-fit:top="{
+      v-fit:left="{
         lockX: true,
         animate: {
           enter: {
@@ -20,7 +20,7 @@
 
       <div class="tips">
         设置 lockX: true 属性之后，<br>
-        div 总体宽度不受屏幕宽度影响<br>
+        div 总体尺寸不受屏幕宽度影响<br>
         可以尝试调整浏览器宽度查看效果
       </div>
     </div>
@@ -38,7 +38,7 @@
 
       <div class="tips">
         设置 lockX: true 属性之后，<br>
-        div 总体宽度不受屏幕宽度影响<br>
+        div 总体尺寸不受屏幕宽度影响<br>
         可以尝试调整浏览器宽度查看效果
       </div>
     </div>

@@ -35,6 +35,7 @@ export function getElementScale(lock: { x: boolean; y: boolean }): number {
   return scale
 }
 
+/** 缓存 translate 值 */
 function getTranslate(el: HTMLElement, scale: number, origin: Origin) {
   const offsetTop = el.offsetTop
   const offsetLeft = el.offsetLeft
@@ -50,7 +51,7 @@ function getTranslate(el: HTMLElement, scale: number, origin: Origin) {
 
   if (origin === 'center' || origin === 'centerTop') {
     return {
-      x: (window.innerWidth - (el.clientWidth * scale)) / 2,
+      x: (window.innerWidth - (el.clientWidth * scale)) / 2 - offsetLeft + offsetLeft * scale,
       y: -offsetTop + offsetTop * scale,
     }
   }
@@ -66,21 +67,21 @@ function getTranslate(el: HTMLElement, scale: number, origin: Origin) {
   if (origin === 'leftCenter') {
     return {
       x: -offsetLeft + offsetLeft * scale,
-      y: (window.innerHeight - (el.clientHeight * scale)) / 2,
+      y: ((window.innerHeight - (el.clientHeight * scale)) / 2) - offsetTop + offsetTop * scale,
     }
   }
 
   if (origin === 'centerCenter') {
     return {
-      x: (window.innerWidth - (el.clientWidth * scale)) / 2,
-      y: (window.innerHeight - (el.clientHeight * scale)) / 2,
+      x: (window.innerWidth - (el.clientWidth * scale)) / 2 - offsetLeft + offsetLeft * scale,
+      y: ((window.innerHeight - (el.clientHeight * scale)) / 2) - offsetTop + offsetTop * scale,
     }
   }
 
   if (origin === 'rightCenter') {
     return {
       x: offsetRight - offsetRight * scale,
-      y: (window.innerHeight - (el.clientHeight * scale)) / 2,
+      y: ((window.innerHeight - (el.clientHeight * scale)) / 2) - offsetTop + offsetTop * scale,
     }
   }
 
@@ -93,7 +94,7 @@ function getTranslate(el: HTMLElement, scale: number, origin: Origin) {
 
   if (origin === 'centerBottom') {
     return {
-      x: (window.innerWidth - (el.clientWidth * scale)) / 2,
+      x: (window.innerWidth - (el.clientWidth * scale)) / 2 - offsetLeft + offsetLeft * scale,
       y: offsetBottom - offsetBottom * scale,
     }
   }

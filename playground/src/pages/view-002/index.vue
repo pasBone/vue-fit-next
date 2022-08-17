@@ -10,34 +10,15 @@
       class="panel panel-left"
     >
       视图-002
+
+      <div class="tips">
+        默认 div 总体尺寸会受到浏览器宽度影响<br>
+        可以尝试调整浏览器宽度查看效果
+      </div>
     </div>
 
     <div
-      v-fit:center="{
-        animate: {
-          enter: 'slideInUp',
-          leave: 'slideOutUp',
-        },
-      }"
-      class="top-panel"
-    >
-      top-view
-    </div>
-
-    <div
-      v-fit:center="{
-        animate: {
-          enter: 'slideInDown',
-          leave: 'slideOutDown',
-        },
-      }"
-      class="bottom-panel"
-    >
-      bottom-view
-    </div>
-
-    <div
-      v-fit:bottom="{
+      v-fit:right="{
         animate: {
           enter: 'slideInRight',
           leave: 'slideOutRight',
@@ -46,6 +27,11 @@
       class="panel panel-right"
     >
       视图-002
+
+      <div class="tips">
+        默认 div 总体尺寸会受到浏览器宽度影响<br>
+        可以尝试调整浏览器宽度查看效果
+      </div>
     </div>
   </div>
 </template>
@@ -84,17 +70,6 @@
   background: #abcdef;
   top: 60px;
   position: absolute;
-  font-size: 100px;
-  text-align: center;
-}
-
-.bottom-panel {
-  width: 1800px;
-  height: 200px;
-  background: #ff9900;
-  bottom: 60px;
-  position: absolute;
-  transform-origin: left bottom !important;
   font-size: 100px;
   text-align: center;
 }
