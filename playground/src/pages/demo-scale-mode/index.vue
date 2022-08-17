@@ -1,6 +1,6 @@
 <script setup>
 import { leave } from 'vue-fit-next'
-import { ref, shallowRef } from 'vue'
+import { shallowRef } from 'vue'
 import view001 from './view-001/index.vue'
 import view002 from './view-002/index.vue'
 import view003 from './view-003/index.vue'

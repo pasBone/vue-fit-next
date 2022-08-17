@@ -130,6 +130,7 @@ export function setElementTransform(el: HTMLElement) {
       centerTop: 'left top',
       centerCenter: 'left top',
       centerBottom: 'left bottom',
+
       rightTop: 'right top',
       rightCenter: 'right top',
       rightBottom: 'right bottom',

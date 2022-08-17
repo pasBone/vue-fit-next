@@ -7,8 +7,9 @@
 ## 功能
 
 - 使用简单，一行指令即可满足基本功能。
-- 支持整屏自由拖拽、缩放，帮助查看细节和界面死角。
+- 支持整屏自由拖拽、缩放，帮助开发者查看细节和死角。
 - 支持出场入场动画，切换时过渡更自然。
+- 支持 zoom 模式和 scale 两种模式。
 - 对布局无侵入，不破坏原始 dom 结构。
 
 ## 安装
@@ -39,6 +40,7 @@ app
     Fit({
       width: 3840, // 设计稿宽度
       height: 2160, // 设计稿高度
+      mode: 'scale' // 可选， 支持 scale 和 zoom 两种方案，默认为 scale
     })
   )
   .mount('#app')
@@ -51,59 +53,78 @@ app
 </div>
 ```
 
-## 调整布局方式
+## 使用 zoom 模式
 
-1. 可通过给指令添加参数来调整元素的缩放中心，
+`zoom` 模式采用浏览器非标准属性进行缩放。  
+
+缺点： 
+
+1. **FireFox** 不支持！ (不过大屏展示大多数不用考虑浏览器环境，可以直接上chrome)
+2. 渲染的性能存在差异，zoom会引起一整个页面的重新渲染。 (个人觉得大屏几乎是一次性渲染做展示，倒也不用顾虑太多)
+
+优点：
+
+配合 v-fit 食用更简单，完全不用考虑 v-fit 定义的布局概念，直接使用 css 就能完成你想要的布局和适配。
+
+
+## 使用 scale 模式
+
+`scale` 模式是采用的 css 的 scale 属性进行缩放。
+
+`scale` 模式配合 v-fit 使用前需要了解一些 v-fit 对布局增加的属性概念：
+
+'left' | 'right' | 'center' | 'leftTop' | 'leftCenter' | 'leftBottom' | 'centerTop' | 'centerBottom' | 'centerCenter' | 'rightTop' | 'rightCenter' | 'rightBottom'
+
+### 布局方式
+
+- 可通过给指令添加参数来调整元素的缩放中心，
 
   ```html
-    <div v-fit:1>transform-origin: left top</div>
-    <div v-fit:2>transform-origin: center top</div>
-    <div v-fit:3>transform-origin: right top</div>
+    <div v-fit:left>leftTop 的简写, 左上角</div>
+    <div v-fit:center>centerTop 的简写, 顶部位置且水平居中</div>
+    <div v-fit:right>rightTop 的简写, 右上角</div>
 
-    <div v-fit:4>transform-origin: left center</div>
-    <div v-fit:5>transform-origin: center center</div>
-    <div v-fit:6>transform-origin: right center</div>
+    大多数场景用上面3个布局属性就够用了。当然我们也提供了其他几个位置的属性:
 
-    <div v-fit:7>transform-origin: left bottom</div>
-    <div v-fit:8>transform-origin: center bottom</div>
-    <div v-fit:9>transform-origin: right bottom</div>
+    <div v-fit:leftCenter>靠左，垂直居中</div>
+    <div v-fit:centerCenter>水平垂直居中</div>
+    <div v-fit:rightCenter>靠右，垂直居中</div>
+
+    <div v-fit:leftBottom>左下角</div>
+    <div v-fit:centerBottom>底部位置且水平居中</div>
+    <div v-fit:rightBottom>右下角</div>
   ...
 
-  如果把一个 div 划分成9个小区域的话，那么 1-9 对应的关系如下：
+  如果把一个屏幕划分成9个小区域的话，那么 1-9 对应的关系如下：
 
-                 -----------
-                | 1 | 2 | 3 |
-                 -----------
-                | 4 | 5 | 6 |
-                 -----------
-                | 7 | 8 | 9 |
-                 -----------
-
-  比如元素要水平垂直居中，那就设置 5
+         -----------------------------------------
+        |            |              |             |
+        |    left    |    center    |    right    |
+        |            |              |             |
+         -----------------------------------------
+        |            |              |             |
+        | leftCenter | centerCenter | rightCenter |
+        |            |              |             |
+         -----------------------------------------
+        |            |              |             |
+        | leftBottom | centerBottom | rightBottom |
+        |            |               |            |
+         -----------------------------------------
   ```
-  
-  - 常见的 3 种缩放中心可以 通过 `left`、 `center`、 `right` 的方式简写
+  再配合 css 的 top、right、bottom、left 等可以进行更细微的位置偏移
 
-  ```html
-    <div v-fit:left>缩放中心 transform-origin: left top</div>
-    <div v-fit:center>缩放中心 transform-origin: center top</div>
-    <div v-fit:right>缩放中心 transform-origin: right top</div>
-  ```
-
-2. 使用 origin 属性代替上面:left的写法
+- 使用 origin 属性代替上面:left的写法
+   
 ```html
-<div v-fit="{origin: 'left'}">缩放中心 transform-origin: left top</div>
-<div v-fit="{origin: '1'}">缩放中心 transform-origin: left top</div>
+<div v-fit="{origin: 'left'}"></div>
 ```
-
-3. 也可以直接通过css样式去设置 transform-origin 达到同样的效果
-
 
 ## 拖拽和缩放
 
-- 按住空格键的同时鼠标点击界面即可进行拖动
-- 按住 ctrl 键的同时滚动鼠标，实现整体缩放及位置偏移
-- 双击 space 键进行位置复原
+- 按住空格键的同时鼠标点击界面即可进行拖动。
+- 按住 ctrl 键的同时滚动鼠标，实现整体缩放及位置偏移。
+- 双击 space 键进行位置复原。
+
 
 ## 入场和出场动画
 
@@ -175,16 +196,16 @@ const animate = {
       leave: 'slideOutLeft',   // 也可以直接提供动画名称的方式简写
     },
   }"
-  class="left"
 >
 </div>
 ```
+
 `enter` 和 `leave` 可以直接简写成动画名称，`duration`和`delay`则从全局继承，也可以单个组件覆盖全局。
 
 
 **注意：**
 
-如果需要出场动画，需按要求给根元素添加`Transition`组件
+如果需要**出场**动画，需按要求给根元素添加`Transition`组件
 
 第一步：
 ```ts
@@ -195,8 +216,8 @@ import { leave } from 'vue-fit-next'
 `Transition` 包裹组件即可
 
 ```html
-<Transition mode="out-in" :css="false" @leave="leave">
-<div v-if="show" class="box">
+<Transition mode="out-in" @leave="leave">
+  <div v-if="show" class="box">
     <div
       v-fit="{
         origin: 'left',
