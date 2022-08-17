@@ -11,12 +11,15 @@ const router = createRouter({
   routes,
 })
 
+// 为了方便demo演示，根据地址栏决定采用什么模式
+const mode = location.href.includes('scale') ? 'scale' : 'zoom'
+
 app
   .use(router)
   .use(Fit({
     width: 3840,
     height: 2160,
-    mode: 'scale',
+    mode,
     animate: {
       enter: {
         duration: 500,
