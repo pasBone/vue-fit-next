@@ -12,6 +12,11 @@
 - 支持 zoom 模式和 scale 两种模式。
 - 对布局无侵入，不破坏原始 dom 结构。
 
+## 预览
+
+[scale 模式](https://62fca80a83bbdb00082f2b14--tranquil-baklava-24da8b.netlify.app/demo-scale-mode)
+[zoom 模式](https://62fca80a83bbdb00082f2b14--tranquil-baklava-24da8b.netlify.app/demo-zoom-mode)
+
 ## 安装
 
 使用您选择的包管理器进行安装。
