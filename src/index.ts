@@ -1,7 +1,8 @@
 import type { App, Plugin } from 'vue'
 import type { FitOptions } from './types'
 import { directiveHooks } from './fit'
-export { leave } from './animations'
+import './events' // 事件相关
+export { leave } from './animations' // 动画相关
 
 /**
  * The vue directive.
