@@ -1,4 +1,4 @@
-import { BehaviorSubject, bufferWhen, debounceTime, filter, fromEvent, map, mergeMap, scan, switchMap, takeUntil, tap, throttleTime } from 'rxjs'
+import { BehaviorSubject, bufferWhen, debounceTime, filter, fromEvent, map, merge, mergeMap, scan, switchMap, takeUntil, tap, throttleTime } from 'rxjs'
 import { element$ } from './fit'
 import { getTranslateValue } from './utils'
 
@@ -12,6 +12,9 @@ const SCALE_STEP = 0.05
 const body = document.querySelector('body')!
 const cursor = body.style.cursor
 
+/** 遮罩元素 */
+const fitMask = createMask()
+
 /** RxJS Observable  */
 const resize$ = fromEvent<MouseEvent>(window, 'resize')
 const keyup$ = fromEvent<KeyboardEvent>(window, 'keyup')
@@ -23,6 +26,8 @@ const mousewheel$ = fromEvent<WheelEvent>(window, 'mousewheel', { passive: false
 
 /** 是否是空格键 */
 const isSpaceKey = (event: KeyboardEvent) => event.code === 'Space'
+/** 是否是 Ctrl 键 */
+const isCtrlKey = (event: WheelEvent) => event.ctrlKey
 
 /** 空格键事件. */
 const spaceUp$ = keyup$.pipe(filter(isSpaceKey))
@@ -74,10 +79,29 @@ spaceDown$.pipe(
  *  按住 ctrl 键的同时滚动鼠标，实现整体缩放及位置偏移.
  */
 const ctrlMousewheel$ = (seed: Required<TransformType>) => mousewheel$.pipe(
-  filter(event => event.ctrlKey),
+  filter(isCtrlKey),
   tap(event => event.preventDefault()),
   scan(calcTransform, seed),
 )
+
+/**
+ * 进行拖动或者放大时添加遮罩以免影响3D场景
+ */
+merge(
+  spaceDown$,
+  mousewheel$.pipe(filter(isCtrlKey)),
+)
+  .pipe(throttleTime(500))
+  .subscribe(() => {
+    document.body.appendChild(fitMask)
+  })
+
+/**
+ * 键盘抬起时移除遮罩
+ */
+keyup$.subscribe(() => {
+  document.querySelector('#fitMask')?.remove()
+})
 
 /**
  * body transform 发生变化的时候重新订阅 ctrlMousewheel
@@ -93,6 +117,23 @@ resize$.pipe(
   throttleTime(10),
   map(() => element$.next(null)),
 ).subscribe()
+
+/**
+ * 创建 mask element
+ */
+function createMask() {
+  const fitMask = document.createElement('div')
+  fitMask.id = 'fitMask'
+  Object.assign(fitMask.style, {
+    position: 'fixed',
+    left: 0,
+    top: 0,
+    width: `${window.innerWidth}px`,
+    height: `${window.innerHeight}px`,
+    background: 'none',
+  })
+  return fitMask
+}
 
 /** 计算 transform 的值 */
 function calcTransform(seed: Required<TransformType>, event: WheelEvent) {
