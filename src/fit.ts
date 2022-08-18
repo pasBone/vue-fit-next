@@ -3,7 +3,6 @@ import { Subject } from 'rxjs'
 import type { DirectiveBinding, ObjectDirective } from 'vue'
 import { getComputedStyleNumber, nanoId } from './utils'
 import type { ElementOptions, FitOptions, Origin } from './types'
-import './events' // 事件相关
 
 /** 元素的变换值. */
 export const element$ = new Subject<HTMLElement | null>()
