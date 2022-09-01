@@ -35,7 +35,7 @@ export function getElementScale(lock: { x: boolean; y: boolean }): number {
 }
 
 /** 缓存 translate 值 */
-function getTranslate(el: HTMLElement, scale: number, origin: Origin) {
+function getTranslate(el: HTMLElement, scale: number, origin: Origin = 'left') {
   const offsetTop = el.offsetTop
   const offsetLeft = el.offsetLeft
   const offsetRight = (getComputedStyleNumber(el, 'right') + getComputedStyleNumber(el, 'margin-right'))
@@ -57,7 +57,6 @@ function getTranslate(el: HTMLElement, scale: number, origin: Origin) {
 
   if (origin === 'right' || origin === 'rightTop') {
     return {
-      // x: (el.clientWidth - el.clientWidth * scale) + offsetRight * scale,
       x: offsetRight - offsetRight * scale,
       y: -offsetTop + offsetTop * scale,
     }
