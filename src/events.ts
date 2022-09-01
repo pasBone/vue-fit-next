@@ -131,6 +131,7 @@ function createMask() {
     width: `${window.innerWidth}px`,
     height: `${window.innerHeight}px`,
     background: 'none',
+    zIndex: 9999,
   })
   return fitMask
 }
