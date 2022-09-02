@@ -144,7 +144,7 @@ function calcTransform(seed: Required<TransformType>, event: WheelEvent) {
   const xs = (event.clientX - x) / scale
   const ys = (event.clientY - y) / scale
   scale += (event.deltaY > 0 ? -SCALE_STEP : SCALE_STEP)
-  if (scale >= 0.1 && scale <= 6) {
+  if (scale >= 0.1 && scale <= 10) {
     const dx = event.clientX - xs * scale
     const dy = event.clientY - ys * scale
     return { scale, x: dx, y: dy }
