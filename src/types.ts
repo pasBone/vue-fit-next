@@ -28,6 +28,8 @@ export interface FitOptions {
   animate?: Animate
   /** 适配方式 */
   mode?: 'zoom' | 'scale'
+  /** 每次鼠标滚动缩放的增量 */
+  scaleStep?: number
 }
 
 /** 单个组件的个性配置 */
@@ -54,7 +56,6 @@ export interface ElementOptions extends Animate {
 
   /** 出场入场动画 */
   animate?: Animate
-
 }
 
 export type RequiredAnimateType = Required<AnimateType>
