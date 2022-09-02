@@ -1,12 +1,12 @@
 import { BehaviorSubject, bufferWhen, debounceTime, filter, fromEvent, map, merge, mergeMap, scan, switchMap, takeUntil, tap, throttleTime } from 'rxjs'
-import { element$ } from './fit'
+import { defaultFitOptions, element$ } from './fit'
 import { getTranslateValue } from './utils'
 
 /** 设置 body transform */
 const bodyTransform$ = new BehaviorSubject({ scale: 1, x: 0, y: 0 })
 
 /** 每次缩放的增量. */
-const SCALE_STEP = 0.05
+// const SCALE_STEP = defaultFitOptions.scaleStep || 0.05
 
 /** body 元素 */
 const body = document.querySelector('body')!
@@ -138,6 +138,7 @@ function createMask() {
 
 /** 计算 transform 的值 */
 function calcTransform(seed: Required<TransformType>, event: WheelEvent) {
+  const SCALE_STEP = defaultFitOptions.scaleStep || 0.05
   // eslint-disable-next-line prefer-const
   let { scale, x, y } = seed
   const xs = (event.clientX - x) / scale

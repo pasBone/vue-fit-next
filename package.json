@@ -1,6 +1,6 @@
 {
   "name": "vue-fit-next",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Vue directive with fit screen kit 一个屏幕自适应工具集合的vue指令, 具有拖拽、缩放、入场出场动画",
   "author": "pasbone",
   "license": "MIT",
