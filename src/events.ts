@@ -89,14 +89,12 @@ const ctrlMousewheel$ = (seed: Required<TransformType>) => mousewheel$.pipe(
  */
 merge(
   spaceDown$,
-  mousewheel$.pipe(filter(isCtrlKey)),
+  keydown$.pipe(filter(e => e.ctrlKey)),
 )
   .pipe(throttleTime(500))
   .subscribe(() => {
     if (fitMask)
       fitMask.style.display = 'block'
-    else
-      document.body.appendChild(fitMask)
   })
 
 /**
