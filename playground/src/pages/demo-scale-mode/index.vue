@@ -1,6 +1,6 @@
 <script setup>
 import { leave } from 'vue-fit-next'
-import { shallowRef } from 'vue'
+import { onMounted, shallowRef } from 'vue'
 import view001 from './view-001/index.vue'
 import view002 from './view-002/index.vue'
 import view003 from './view-003/index.vue'
@@ -16,10 +16,18 @@ const componentsMap = {
 function changeView(viewName) {
   component.value = componentsMap[viewName]
 }
+
+onMounted(() => {
+  // 加载场景代码
+  const app = new THING.App({
+    url: 'https://www.thingjs.com/static/models/factory', // 场景地址
+    env: 'Seaside',
+  })
+})
 </script>
 
 <template>
-  <div class="bg-3d" />
+  <div id="div3d" class="bg-3d" />
   <Header />
 
   <!-- 如果需要出场动画，则需要添加 Transition 标签 -->
@@ -47,10 +55,11 @@ function changeView(viewName) {
   top: 0;
   width: 100vw;
   height: 100vh;
-  background: url("/3d-bg.jpg");
+  /* background: url("/3d-bg.jpg"); */
   background-size: cover;
-  z-index: -1;
+  z-index: 3;
 }
+
 .action {
   position: absolute;
   bottom: 60px;
