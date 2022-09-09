@@ -4,6 +4,20 @@
 
 通过 `vue` 指令的方式为元素添加屏幕自适应功能。
 
+## 注意事项
+
+被问到最多次的问题就是加载出来之后是一片空白。
+
+请先检查下是否设置了基础样式哈：
+
+```css
+html, body{
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden
+}
+```
+
 ## 功能
 
 - 使用简单，一行指令即可满足基本功能。
@@ -47,7 +61,8 @@ app
     Fit({
       width: 3840, // 设计稿宽度
       height: 2160, // 设计稿高度
-      mode: 'scale' // 可选， 支持 scale 和 zoom 两种方案，默认为 scale
+      mode: 'scale', // 可选， 支持 scale 和 zoom 两种方案，默认为 scale
+      scaleStep: 0.05 // 可选，默认 0.05， 每次鼠标滚动缩放的增量，分辨率很大的时候会比较有用
     })
   )
   .mount('#app')
