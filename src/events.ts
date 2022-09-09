@@ -13,7 +13,7 @@ const body = document.querySelector('body')!
 const cursor = body.style.cursor
 
 /** 遮罩元素 */
-const fitMask = createMask()
+const fitMask: HTMLElement = createMask()
 
 /** RxJS Observable  */
 const resize$ = fromEvent<MouseEvent>(window, 'resize')
@@ -93,14 +93,18 @@ merge(
 )
   .pipe(throttleTime(500))
   .subscribe(() => {
-    document.body.appendChild(fitMask)
+    if (fitMask)
+      fitMask.style.display = 'block'
+    else
+      document.body.appendChild(fitMask)
   })
 
 /**
  * 键盘抬起时移除遮罩
  */
 keyup$.subscribe(() => {
-  document.querySelector('#fitMask')?.remove()
+  if (fitMask)
+    fitMask.style.display = 'none'
 })
 
 /**
@@ -128,11 +132,12 @@ function createMask() {
     position: 'fixed',
     left: 0,
     top: 0,
-    width: `${window.innerWidth}px`,
-    height: `${window.innerHeight}px`,
+    width: '100vw',
+    height: '100vh',
     background: 'none',
     zIndex: 9999,
   })
+  document.body.appendChild(fitMask)
   return fitMask
 }
 
