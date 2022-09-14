@@ -134,6 +134,7 @@ function createMask() {
     height: '100vh',
     background: 'none',
     zIndex: 9999,
+    display: 'none',
   })
   document.body.appendChild(fitMask)
   return fitMask
