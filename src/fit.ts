@@ -1,6 +1,6 @@
 /* eslint-disable import/no-mutable-exports */
 import { Subject } from 'rxjs'
-import type { DirectiveBinding, ObjectDirective } from 'vue'
+import type { DirectiveBinding } from 'vue'
 import { getComputedStyleNumber, nanoId } from './utils'
 import type { ElementOptions, FitOptions, Origin } from './types'
 
@@ -158,38 +158,45 @@ export function setElementOptions(el: HTMLElement, options: Partial<ElementOptio
   element$.next(el)
 }
 
+/** 指令元素生命周期 mounted */
+function mounted(el: HTMLElement, binding: DirectiveBinding) {
+  const id = nanoId(8)
+  el.dataset.fit = id
+
+  const { arg, value } = binding
+
+  const origin = value?.origin || arg || ''
+
+  const lockX = value?.lockX || false
+  const lockY = value?.lockY || false
+
+  const scale = getElementScale({ x: lockX, y: lockY })
+
+  // 添加基本属性值
+  setElementOptions(el, {
+    animate: value?.animate,
+    origin,
+    scale,
+    nanoId: id,
+    lockX,
+    lockY,
+  })
+}
+
+/** 指令元素生命周期 unmounted */
+function unmounted(el: HTMLElement) {
+  elements.delete(el)
+}
+
 /** 指令对应的生命周期  */
-export function directiveHooks(fitOptions: FitOptions): ObjectDirective {
+export function directiveHooks(fitOptions: FitOptions) {
   defaultFitOptions = fitOptions
-
   return {
-    mounted(el: HTMLElement, binding: DirectiveBinding) {
-      const id = nanoId(8)
-      el.dataset.fit = id
-
-      const { arg, value } = binding
-
-      const origin = value?.origin || arg || ''
-
-      const lockX = value?.lockX || false
-      const lockY = value?.lockY || false
-
-      const scale = getElementScale({ x: lockX, y: lockY })
-
-      // 添加基本属性值
-      setElementOptions(el, {
-        animate: value?.animate,
-        origin,
-        scale,
-        nanoId: id,
-        lockX,
-        lockY,
-      })
-    },
-
-    unmounted(el) {
-      elements.delete(el)
-    },
+    mounted,
+    unmounted,
+    // 简单兼容 vue-2.x 版本
+    bind: mounted,
+    unbind: unmounted,
   }
 }
 
