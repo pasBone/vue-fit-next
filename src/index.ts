@@ -7,7 +7,7 @@ export { leave } from './animations' // 动画相关
 /**
  * The vue directive.
  */
-export default function FitPlugin(defaultOptions: FitOptions): Plugin {
+export default function FitPlugin(defaultOptions: FitOptions): Plugin | any {
   return {
     install(app: App) {
       app.directive('fit', directiveHooks(defaultOptions))
