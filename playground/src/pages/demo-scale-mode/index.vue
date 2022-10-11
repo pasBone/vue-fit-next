@@ -19,10 +19,6 @@ function changeView(viewName) {
 
 onMounted(() => {
   // 加载场景代码
-  const app = new THING.App({
-    url: 'https://www.thingjs.com/static/models/factory', // 场景地址
-    env: 'Seaside',
-  })
 })
 </script>
 
@@ -55,9 +51,9 @@ onMounted(() => {
   top: 0;
   width: 100vw;
   height: 100vh;
-  /* background: url("/3d-bg.jpg"); */
+  background: url("/3d-bg.jpg");
   background-size: cover;
-  z-index: 3;
+  /* z-index: 3; */
 }
 
 .action {
