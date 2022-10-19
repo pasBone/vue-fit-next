@@ -165,5 +165,6 @@ function setBodyTransform(transform: TransformType) {
     transformOrigin: '0 0',
   })
   body.setAttribute('data-scale', `${scale}`)
+  document.documentElement.style.setProperty('--fit-body-scale', `${scale}`)
   return { scale, x, y }
 }
