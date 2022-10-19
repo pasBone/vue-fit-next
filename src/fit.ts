@@ -181,6 +181,9 @@ function mounted(el: HTMLElement, binding: DirectiveBinding) {
     lockX,
     lockY,
   })
+
+  document.documentElement.style.setProperty('--fit-element-scale', `${scale}`)
+  document.documentElement.style.setProperty('--fit-body-scale', `${1}`)
 }
 
 /** 指令元素生命周期 unmounted */
@@ -209,6 +212,7 @@ element$.subscribe((value) => {
       const scale = getElementScale({ x: opt.lockX, y: opt.lockY })
       setElementOptions(el, { scale })
       setElementTransform(el)
+      document.documentElement.style.setProperty('--fit-element-scale', `${scale}`)
     })
   }
   else {
