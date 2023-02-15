@@ -41,70 +41,27 @@ function getTranslate(el: HTMLElement, scale: number, origin: Origin = 'left') {
   const offsetRight = (getComputedStyleNumber(el, 'right') + getComputedStyleNumber(el, 'margin-right'))
   const offsetBottom = (getComputedStyleNumber(el, 'bottom') + getComputedStyleNumber(el, 'margin-bottom'))
 
-  if (origin === 'left' || origin === 'leftTop') {
-    return {
-      x: -offsetLeft + offsetLeft * scale,
-      y: -offsetTop + offsetTop * scale,
-    }
+  const documentWidth = window.innerWidth
+  const documentHeight = window.innerHeight
+
+  const originMap = {
+    center: { x: (documentWidth - (el.clientWidth * scale)) / 2 - offsetLeft + offsetLeft * scale, y: -offsetTop + offsetTop * scale },
+    centerTop: { x: (documentWidth - (el.clientWidth * scale)) / 2 - offsetLeft + offsetLeft * scale, y: -offsetTop + offsetTop * scale },
+    centerCenter: { x: (documentWidth - (el.clientWidth * scale)) / 2 - offsetLeft + offsetLeft * scale, y: (documentHeight - (el.clientHeight * scale)) / 2 - offsetTop + offsetTop * scale },
+    centerBottom: { x: (documentWidth - (el.clientWidth * scale)) / 2 - offsetLeft + offsetLeft * scale, y: offsetBottom - offsetBottom * scale },
+
+    left: { x: -offsetLeft + offsetLeft * scale, y: -offsetTop + offsetTop * scale },
+    leftTop: { x: -offsetLeft + offsetLeft * scale, y: -offsetTop + offsetTop * scale },
+    leftCenter: { x: -offsetLeft + offsetLeft * scale, y: (documentHeight - (el.clientHeight * scale)) / 2 - offsetTop + offsetTop * scale },
+    leftBottom: { x: -offsetLeft + offsetLeft * scale, y: offsetBottom - offsetBottom * scale },
+
+    right: { x: offsetRight - offsetRight * scale, y: -offsetTop + offsetTop * scale },
+    rightTop: { x: offsetRight - offsetRight * scale, y: -offsetTop + offsetTop * scale },
+    rightBottom: { x: offsetRight - offsetRight * scale, y: offsetBottom - offsetBottom * scale },
+    rightCenter: { x: offsetRight - offsetRight * scale, y: ((documentHeight - (el.clientHeight * scale)) / 2) - offsetTop + offsetTop * scale },
   }
 
-  if (origin === 'center' || origin === 'centerTop') {
-    return {
-      x: (window.innerWidth - (el.clientWidth * scale)) / 2 - offsetLeft + offsetLeft * scale,
-      y: -offsetTop + offsetTop * scale,
-    }
-  }
-
-  if (origin === 'right' || origin === 'rightTop') {
-    return {
-      x: offsetRight - offsetRight * scale,
-      y: -offsetTop + offsetTop * scale,
-    }
-  }
-
-  if (origin === 'leftCenter') {
-    return {
-      x: -offsetLeft + offsetLeft * scale,
-      y: ((window.innerHeight - (el.clientHeight * scale)) / 2) - offsetTop + offsetTop * scale,
-    }
-  }
-
-  if (origin === 'centerCenter') {
-    return {
-      x: (window.innerWidth - (el.clientWidth * scale)) / 2 - offsetLeft + offsetLeft * scale,
-      y: ((window.innerHeight - (el.clientHeight * scale)) / 2) - offsetTop + offsetTop * scale,
-    }
-  }
-
-  if (origin === 'rightCenter') {
-    return {
-      x: offsetRight - offsetRight * scale,
-      y: ((window.innerHeight - (el.clientHeight * scale)) / 2) - offsetTop + offsetTop * scale,
-    }
-  }
-
-  if (origin === 'leftBottom') {
-    return {
-      x: -offsetLeft + offsetLeft * scale,
-      y: offsetBottom - offsetBottom * scale,
-    }
-  }
-
-  if (origin === 'centerBottom') {
-    return {
-      x: (window.innerWidth - (el.clientWidth * scale)) / 2 - offsetLeft + offsetLeft * scale,
-      y: offsetBottom - offsetBottom * scale,
-    }
-  }
-
-  if (origin === 'rightBottom') {
-    return {
-      x: offsetRight - offsetRight * scale,
-      y: offsetBottom - offsetBottom * scale,
-    }
-  }
-
-  return { x: 0, y: 0 }
+  return originMap[origin] || { x: 0, y: 0 }
 }
 
 /**
@@ -121,6 +78,7 @@ export function setElementTransform(el: HTMLElement) {
       left: 'left top',
       center: 'left top',
       right: 'right top',
+
       leftTop: 'left top',
       leftCenter: 'left top',
       leftBottom: 'left bottom',
