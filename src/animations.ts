@@ -80,7 +80,7 @@ export function addAnimateProps(el: HTMLElement, animate: RequiredAnimateType) {
  * @param parent
  * @param remove
  */
-export function leave(parent: HTMLElement, remove: Function) {
+export function leave(parent: Element, remove: () => void) {
   const fitElements: NodeListOf<HTMLElement> = parent.querySelectorAll('[data-fit]')
   removeRules()
 
