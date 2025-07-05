@@ -265,6 +265,16 @@ import { leave } from 'vue-fit-next'
 </Transition>
 
 ```
+
+## 赞助
+
+本项目 CDN 加速及安全防护由 Tencent EdgeOne 赞助
+
+[亚洲最佳CDN、边缘和安全解决方案 - Tencent EdgeOne]([https://62fca80a83bbdb00082f2b14--tranquil-baklava-24da8b.netlify.app/demo-zoom-mode](https://edgeone.ai/zh?from=github))
+<br />
+<br />
+![](https://edgeone.ai/_next/static/media/headLogo.daeb48ad.png?auto=format&fit=max&w=128)
+
 ## License
 
 [MIT](./LICENSE) License &copy; 2022-PRESENT [pasbone](https://github.com/pasbone)
