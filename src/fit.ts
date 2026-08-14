@@ -3,6 +3,7 @@ import { Subject } from 'rxjs'
 import type { DirectiveBinding } from 'vue'
 import { getComputedStyleNumber, nanoId } from './utils'
 import type { ElementOptions, FitOptions, Origin } from './types'
+import { calculateTranslate, getTransformOrigin, normalizeOrigin } from './layout'
 
 /** 元素的变换值. */
 export const element$ = new Subject<HTMLElement | null>()
@@ -28,40 +29,21 @@ export function getElementScale(lock: { x: boolean; y: boolean }): number {
   if (lock.y)
     return scaleX
 
-  const w = window.innerWidth / defaultFitOptions.width
-  const h = window.innerHeight / defaultFitOptions.height
-  const scale = Math.min(w, h) // 宽度与高度的比例取最小的，以确保屏幕可以完全显示
-  return scale
+  return Math.min(scaleX, scaleY) // 宽度与高度的比例取最小的，以确保屏幕可以完全显示
 }
 
 /** 缓存 translate 值 */
 function getTranslate(el: HTMLElement, scale: number, origin: Origin = 'left') {
-  const offsetTop = el.offsetTop
-  const offsetLeft = el.offsetLeft
-  const offsetRight = (getComputedStyleNumber(el, 'right') + getComputedStyleNumber(el, 'margin-right'))
-  const offsetBottom = (getComputedStyleNumber(el, 'bottom') + getComputedStyleNumber(el, 'margin-bottom'))
-
-  const documentWidth = window.innerWidth
-  const documentHeight = window.innerHeight
-
-  const originMap = {
-    center: { x: (documentWidth - (el.clientWidth * scale)) / 2 - offsetLeft + offsetLeft * scale, y: -offsetTop + offsetTop * scale },
-    centerTop: { x: (documentWidth - (el.clientWidth * scale)) / 2 - offsetLeft + offsetLeft * scale, y: -offsetTop + offsetTop * scale },
-    centerCenter: { x: (documentWidth - (el.clientWidth * scale)) / 2 - offsetLeft + offsetLeft * scale, y: (documentHeight - (el.clientHeight * scale)) / 2 - offsetTop + offsetTop * scale },
-    centerBottom: { x: (documentWidth - (el.clientWidth * scale)) / 2 - offsetLeft + offsetLeft * scale, y: offsetBottom - offsetBottom * scale },
-
-    left: { x: -offsetLeft + offsetLeft * scale, y: -offsetTop + offsetTop * scale },
-    leftTop: { x: -offsetLeft + offsetLeft * scale, y: -offsetTop + offsetTop * scale },
-    leftCenter: { x: -offsetLeft + offsetLeft * scale, y: (documentHeight - (el.clientHeight * scale)) / 2 - offsetTop + offsetTop * scale },
-    leftBottom: { x: -offsetLeft + offsetLeft * scale, y: offsetBottom - offsetBottom * scale },
-
-    right: { x: offsetRight - offsetRight * scale, y: -offsetTop + offsetTop * scale },
-    rightTop: { x: offsetRight - offsetRight * scale, y: -offsetTop + offsetTop * scale },
-    rightBottom: { x: offsetRight - offsetRight * scale, y: offsetBottom - offsetBottom * scale },
-    rightCenter: { x: offsetRight - offsetRight * scale, y: ((documentHeight - (el.clientHeight * scale)) / 2) - offsetTop + offsetTop * scale },
-  }
-
-  return originMap[origin] || { x: 0, y: 0 }
+  return calculateTranslate({
+    viewportWidth: window.innerWidth,
+    viewportHeight: window.innerHeight,
+    elementWidth: el.clientWidth,
+    elementHeight: el.clientHeight,
+    offsetTop: el.offsetTop,
+    offsetLeft: el.offsetLeft,
+    offsetRight: getComputedStyleNumber(el, 'right') + getComputedStyleNumber(el, 'margin-right'),
+    offsetBottom: getComputedStyleNumber(el, 'bottom') + getComputedStyleNumber(el, 'margin-bottom'),
+  }, scale, origin)
 }
 
 /**
@@ -74,28 +56,8 @@ export function setElementTransform(el: HTMLElement) {
     Object.assign(el.style, { zoom: scale })
   }
   else {
-    const originMap = {
-      left: 'left top',
-      center: 'left top',
-      right: 'right top',
-
-      leftTop: 'left top',
-      leftCenter: 'left top',
-      leftBottom: 'left bottom',
-
-      centerTop: 'left top',
-      centerCenter: 'left top',
-      centerBottom: 'left bottom',
-
-      rightTop: 'right top',
-      rightCenter: 'right top',
-      rightBottom: 'right bottom',
-    }
     Object.assign(el.style, {
-      // transformOrigin: TRANSFORM_ORIGIN[options.origin],
-      // transform: el.style.transform.replace(/scale\(.+?\)/g, scaleStr),
-      // transform: `matrix(${scale}, 0, 0, ${scale}, ${getTranslate(el, scale, options.origin)})`,
-      transformOrigin: originMap[origin],
+      transformOrigin: getTransformOrigin(origin),
       transform: `translate(${x}px, ${y}px) scale(${scale}, ${scale})`,
     })
   }
@@ -123,7 +85,7 @@ function mounted(el: HTMLElement, binding: DirectiveBinding) {
 
   const { arg, value } = binding
 
-  const origin = value?.origin || arg || ''
+  const origin = normalizeOrigin(value?.origin || arg)
 
   const lockX = value?.lockX || false
   const lockY = value?.lockY || false
