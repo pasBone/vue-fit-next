@@ -1,15 +1,3 @@
-<script>
-export default {
-  name: 'App',
-  created() {
-    const obj = {
-      a: 10,
-    }
-    console.log(obj.a?.b?.c)
-  },
-}
-</script>
-
 <template>
   <div id="app">
     <div v-fit:left class="box" />

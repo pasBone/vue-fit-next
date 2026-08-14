@@ -16,6 +16,7 @@
   "exclude": [
     "dist",
     "playground",
+    "playground-2.x",
     "cypress"
   ]
 }
