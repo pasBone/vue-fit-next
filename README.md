@@ -1,5 +1,7 @@
 # vue-fit-next
 
+[简体中文](./README.md) | [English](./README.en.md)
+
 [![npm](https://img.shields.io/npm/v/vue-fit-next)](https://www.npmjs.com/package/vue-fit-next)
 
 通过 `vue` 指令的方式为元素添加屏幕自适应功能。

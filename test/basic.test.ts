@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest'
+import FitPlugin from '../src'
 
-describe('Hi', () => {
-  it('should works', () => {
-    expect(1 + 1).toEqual(2)
+describe('FitPlugin', () => {
+  it('can be imported without browser globals', () => {
+    expect(typeof FitPlugin).toBe('function')
   })
 })
